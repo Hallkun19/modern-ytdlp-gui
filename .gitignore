@@ -1,0 +1,85 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# TypeScript v1 declaration files
+typings/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional Stylelint cache
+.stylelintcache
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# next.js
+.next/
+out/
+
+# nuxt.js
+.nuxt/
+dist/
+
+# react-static
+artifacts/
+
+# Parcel-js
+.cache/
+.parcel-cache/
+
+# Serverless Webpack directories
+.webpack/
+
+# Gun.js database
+radata/
+
+# TypeScript
+*.tsbuildinfo
+
+# Build outputs
+dist/
+dist-ssr/
+build/
+
+# IDE files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Tauri / Rust
+src-tauri/target/
+src-tauri/gen/schemas
+src-tauri/bin/yt-dlp*
+src-tauri/bin/ffmpeg*
+src-tauri/bin/ffprobe*
+
+# Temporary files
+tmp/
+temp/
