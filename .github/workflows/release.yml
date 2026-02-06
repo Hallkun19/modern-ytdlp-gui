@@ -29,6 +29,31 @@ jobs:
       - name: install frontend dependencies
         run: npm install
 
+      - name: Download Sidecars
+        shell: pwsh
+        run: |
+          mkdir -p src-tauri/bin
+
+          # Download yt-dlp
+          $ytdlp_url = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe"
+          Invoke-WebRequest -Uri $ytdlp_url -OutFile "src-tauri/bin/yt-dlp-x86_64-pc-windows-msvc.exe"
+
+          # Download FFmpeg (shared-7z from gyan.dev)
+          $ffmpeg_zip_url = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
+          Invoke-WebRequest -Uri $ffmpeg_zip_url -OutFile "ffmpeg.zip"
+          Expand-Archive -Path "ffmpeg.zip" -DestinationPath "ffmpeg_temp"
+
+          # Find and move ffmpeg/ffprobe
+          $ffmpeg_exe = Get-ChildItem -Path "ffmpeg_temp" -Filter "ffmpeg.exe" -Recurse | Select-Object -First 1
+          $ffprobe_exe = Get-ChildItem -Path "ffmpeg_temp" -Filter "ffprobe.exe" -Recurse | Select-Object -First 1
+
+          Move-Item $ffmpeg_exe.FullName "src-tauri/bin/ffmpeg-x86_64-pc-windows-msvc.exe"
+          Move-Item $ffprobe_exe.FullName "src-tauri/bin/ffprobe-x86_64-pc-windows-msvc.exe"
+
+          # Cleanup
+          Remove-Item "ffmpeg.zip"
+          Remove-Item -Recurse "ffmpeg_temp"
+
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
