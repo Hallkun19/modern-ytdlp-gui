@@ -1,6 +1,10 @@
 # Modern Downloader (ModernDL)
 
-Modern Downloader は、`yt-dlp` をコアとした、シンプルで使いやすく、かつ高機能なオープンソースのビデオダウンローダーです。Tauri v2 + React + Tailwind CSS v4 で構築されており、軽量で高速に動作します。
+Modern Downloader は、`yt-dlp` をシンプルで使いやすくしたオープンソースのビデオダウンローダーです。
+多分だいぶ軽量で高速に動作します！
+
+ここから下はAIに書かせたよ
+すごいねAIって
 
 ## 🚀 主な機能
 
