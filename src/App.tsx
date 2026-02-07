@@ -423,7 +423,7 @@ function App() {
       </main>
       
       <footer className="text-center py-4 text-[10px] text-zinc-700 dark:text-zinc-600">
-        v1.0.1
+        v1.0.2
       </footer>
 
       <ToastContainer toasts={toasts} removeToast={removeToast} />
