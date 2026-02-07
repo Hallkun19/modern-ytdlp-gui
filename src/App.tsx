@@ -10,6 +10,7 @@ import {
 } from "@tauri-apps/plugin-notification";
 import { onOpenUrl } from "@tauri-apps/plugin-deep-link";
 import { FolderIcon } from "@heroicons/react/24/outline";
+import { ToastContainer, ToastType } from "./components/Toast";
 
 // New Components & Types
 import { Layout } from "./components/Layout";
@@ -34,6 +35,7 @@ function App() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [language, setLanguage] = useState<Language>('en');
   const [autoFetch, setAutoFetch] = useState(true);
+  const [toasts, setToasts] = useState<{ id: string; message: string; type: ToastType }[]>([]);
 
   // Quick Mode State
   const [quickUrl, setQuickUrl] = useState("");
@@ -195,12 +197,22 @@ function App() {
     return () => { listeners.forEach(lp => lp.then(f => f())); };
   }, [queue.map(i => i.status === 'downloading').join(',')]);
 
-  // --- Helpers ---
+  const addToast = useCallback((message: string, type: ToastType = 'info') => {
+    const id = Math.random().toString(36).substring(2, 9);
+    setToasts(prev => [...prev, { id, message, type }]);
+  }, []);
 
-  const notifyCompletion = (title: string) => {
+  const removeToast = useCallback((id: string) => {
+    setToasts(prev => prev.filter(t => t.id !== id));
+  }, []);
+
+  const notifyCompletion = (title: string, type: ToastType = 'success') => {
+    // System notification
     if (useNotifications) {
-      sendNotification({ title: "Download Finished", body: title });
+      sendNotification({ title: type === 'success' ? "Download Finished" : "Download Error", body: title });
     }
+    // Always show toast
+    addToast(title, type);
   };
 
   const handleBrowse = async () => {
@@ -239,8 +251,10 @@ function App() {
       setQuickProgress("100%");
       notifyCompletion(quickMeta?.title || "Video download finished");
     } catch (e) {
-      setQuickError(String(e));
+      const errMsg = String(e);
+      setQuickError(errMsg);
       setQuickStatus('error');
+      notifyCompletion(errMsg, 'error');
     } finally {
       (await unlisten)();
     }
@@ -322,7 +336,9 @@ function App() {
           setQueue(prev => prev.map(q => q.id === currentId ? { ...q, status: 'finished', progress: '100%' } : q));
           notifyCompletion(item.metadata?.title || "Video in queue finished");
         } catch (e) {
-          setQueue(prev => prev.map(q => q.id === currentId ? { ...q, status: 'error', error: String(e) } : q));
+          const errMsg = String(e);
+          setQueue(prev => prev.map(q => q.id === currentId ? { ...q, status: 'error', error: errMsg } : q));
+          notifyCompletion(errMsg, 'error');
         }
       }
     }
@@ -409,6 +425,8 @@ function App() {
       <footer className="text-center py-4 text-[10px] text-zinc-700 dark:text-zinc-600">
         v1.0.1
       </footer>
+
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </Layout>
   );
 }
