@@ -407,7 +407,7 @@ function App() {
       </main>
       
       <footer className="text-center py-4 text-[10px] text-zinc-700 dark:text-zinc-600">
-        v2.3
+        v1.0.1
       </footer>
     </Layout>
   );
